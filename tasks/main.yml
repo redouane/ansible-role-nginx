@@ -1,0 +1,21 @@
+---
+
+- name: Add Nginx Repository APT Key
+  apt_key: url=http://nginx.org/keys/nginx_signing.key
+
+
+- name: Add Nginx APT Repository
+  apt_repository: repo="deb http://nginx.org/packages/ubuntu/ trusty nginx"
+
+- name: Install NGinX Package
+  apt: pkg="nginx" state=present force=yes
+
+- name: configure nginx
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  notify:
+    - restart nginx
+
+- name: configure site
+  template: src=site.conf.j2 dest=/etc/nginx/conf.d/site.conf
+  notify:
+    - restart nginx
